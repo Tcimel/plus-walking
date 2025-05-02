@@ -1,0 +1,15 @@
+package com.example.springpluswalking.user.exception;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public enum UserErrorCode {
+	USER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
+	USER_DUPLICATION_EMAIL(400, "이미 가입된 이메일 정보입니다."),
+	USER_WRONG_PW(400, "비밀번호를 재확인해주세요.");
+
+	private final int code;
+	private final String message;
+}
