@@ -11,16 +11,7 @@ Content-Type: application/json
   "password": "Password1!"
 }
 
-### 로그인, 틀린 비밀번호로
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-  "email": "test@example.com",
-  "password": "asdf"
-}
-
-### 로그인, 맞는 비밀번호 및 계정, access token 전달
+### 로그인, 맞는 비밀번호 및 계정
 POST http://localhost:8080/login
 Content-Type: application/json
 
@@ -28,3 +19,39 @@ Content-Type: application/json
   "email": "test@example.com",
   "password": "Password1!"
 }
+
+### 로그인, 틀린 비밀번호로
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "email": "test3@example.com",
+  "password": "asdf"
+}
+
+### 일정 생성
+POST http://localhost:8080/schedule
+Content-Type: application/json
+
+{
+  "title": "제목이다33",
+  "content": "내용이다33"
+}
+
+### 일정 전체 조회
+GET http://localhost:8080/schedule?page=1&size=10
+
+### 일정 단건 조회
+GET http://localhost:8080/schedule/1
+
+### 일정 수정
+PATCH http://localhost:8080/schedule/2
+Content-Type: application/json
+
+{
+  "title": "제목이다ㅇㅇㅇㅇㅇㅇ",
+  "content": "내용이다ㅇㅇㅇㅇㅇㅇ"
+}
+
+### 일정 삭제
+DELETE http://localhost:8080/schedule/6

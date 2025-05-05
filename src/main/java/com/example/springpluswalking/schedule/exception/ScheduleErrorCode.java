@@ -1,0 +1,15 @@
+package com.example.springpluswalking.schedule.exception;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public enum ScheduleErrorCode {
+	USER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
+	SCHEDULE_NOT_FOUND(404, "존재하지 않는 게시물입니다."),
+	NO_PERMISSION(401, "권한이 없습니다.");
+
+	private final int code;
+	private final String message;
+}
