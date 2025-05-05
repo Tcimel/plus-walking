@@ -1,0 +1,94 @@
+package com.example.springpluswalking.comment.service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.springpluswalking.comment.dto.request.CommentRequestDto;
+import com.example.springpluswalking.comment.dto.response.CommentPageResponseDto;
+import com.example.springpluswalking.comment.dto.response.CommentResponseDto;
+import com.example.springpluswalking.comment.entity.Comment;
+import com.example.springpluswalking.comment.exception.CommentErrorCode;
+import com.example.springpluswalking.comment.exception.CommentException;
+import com.example.springpluswalking.comment.repository.CommentRepository;
+import com.example.springpluswalking.schedule.entity.Schedule;
+import com.example.springpluswalking.schedule.repository.ScheduleRepository;
+import com.example.springpluswalking.user.entity.User;
+import com.example.springpluswalking.user.repository.UserRepository;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class CommentService {
+
+	private final CommentRepository commentRepository;
+	private final ScheduleRepository scheduleRepository;
+	private final UserRepository userRepository;
+
+	public CommentResponseDto createComment(Long scheudleId, @Valid CommentRequestDto requestDto, Long userId) {
+		Schedule findSchedule = scheduleRepository.findByIdOrElseThrow(scheudleId);
+		User writer = userRepository.findByIdOrElseThrow(userId);
+
+		Comment comment = Comment.builder()
+			.content(requestDto.getContent())
+			.schedule(findSchedule)
+			.userEmail(writer.getEmail())
+			.build();
+
+		commentRepository.save(comment);
+		return new CommentResponseDto(comment);
+	}
+
+	public Page<CommentPageResponseDto> findAll(Long scheduleId, int page, int size) {
+		int adjustPage = (page>0) ? page-1 : 0;
+
+		PageRequest pageable = PageRequest.of(adjustPage, size, Sort.by("createdAt").ascending());
+
+		Page<Comment> commentPage = commentRepository.findByScheduleIdOrElseThrow(scheduleId, pageable);
+
+		return commentPage.map(comment -> CommentPageResponseDto.builder()
+			.id(comment.getId())
+			.userEmail(comment.getUserEmail())
+			.content(comment.getContent())
+			.createdAt(comment.getCreatedAt())
+			.build()
+		);
+	}
+
+	public CommentResponseDto findById(Long cid) {
+		Comment findComment = commentRepository.findByIdOrElseThrow(cid);
+		return new CommentResponseDto(findComment);
+	}
+
+	@Transactional
+	public CommentResponseDto updateComment(Long cid, Long userId, CommentRequestDto requestDto){
+		User findUser = userRepository.findByIdOrElseThrow(userId);
+		Comment findComment = commentRepository.findByIdOrElseThrow(cid);
+
+		if(!findComment.getUserEmail().equals(findUser.getEmail())){
+			throw new CommentException(CommentErrorCode.NO_PERMISSION);
+		}
+
+		findComment.update(requestDto.getContent());
+		commentRepository.save(findComment);
+		return new CommentResponseDto(findComment);
+	}
+
+	public void deleteComment(Long cid, Long userId){
+		User findUser = userRepository.findByIdOrElseThrow(userId);
+		Comment findComment = commentRepository.findByIdOrElseThrow(cid);
+
+		if(!findComment.getUserEmail().equals(findUser.getEmail())){
+			throw new CommentException(CommentErrorCode.NO_PERMISSION);
+		}
+		commentRepository.delete(findComment);
+	}
+
+	public int getCommentCount(Long id){
+		return commentRepository.countByScheduleId(id);
+	}
+}

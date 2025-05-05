@@ -11,18 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.example.springpluswalking.schedule.dto.request.ScheduleRequestDto;
 import com.example.springpluswalking.schedule.dto.request.ScheduleupdateRequestDto;
 import com.example.springpluswalking.schedule.dto.response.SchedulePageResponseDto;
 import com.example.springpluswalking.schedule.dto.response.ScheduleResponseDto;
-import com.example.springpluswalking.schedule.entity.Schedule;
 import com.example.springpluswalking.schedule.service.ScheduleService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 

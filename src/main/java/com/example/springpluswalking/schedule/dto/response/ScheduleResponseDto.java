@@ -25,18 +25,21 @@ public class ScheduleResponseDto {
 
 	private final String content;
 
+	private final int commentCount;
+
 	@NotNull
 	private final LocalDateTime createdAt;
 
 	@NotNull
 	private final LocalDateTime updatedAt;
 
-	public ScheduleResponseDto(Schedule sc){
+	public ScheduleResponseDto(Schedule sc, int commentCount){
 		this.id = sc.getId();
 		this.userEmail = sc.getUserEmail();
 		this.title = sc.getTitle();
 		this.content = sc.getContent();
 		this.createdAt = sc.getCreatedAt();
 		this.updatedAt = sc.getUpdatedAt();
+		this.commentCount = commentCount;
 	}
 }

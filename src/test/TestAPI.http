@@ -7,7 +7,7 @@ POST http://localhost:8080/signup
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
+  "email": "test2@example.com",
   "password": "Password1!"
 }
 
@@ -16,7 +16,7 @@ POST http://localhost:8080/login
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
+  "email": "test2@example.com",
   "password": "Password1!"
 }
 
@@ -39,7 +39,7 @@ Content-Type: application/json
 }
 
 ### 일정 전체 조회
-GET http://localhost:8080/schedule?page=1&size=10
+GET http://localhost:8080/schedule?page=2&size=10
 
 ### 일정 단건 조회
 GET http://localhost:8080/schedule/1
@@ -55,3 +55,25 @@ Content-Type: application/json
 
 ### 일정 삭제
 DELETE http://localhost:8080/schedule/6
+
+### 댓글 생성
+POST http://localhost:8080/3/comment
+Content-Type:application/json
+
+{
+  "content": "댓글글글 댓글글글 댓글글글"
+}
+
+### 댓글 전체 조회
+GET http://localhost:8080/1/comments
+
+### 댓글 수정
+PATCH http://localhost:8080/comment/1
+Content-Type: application/json
+
+{
+  "content": "댓글 수정수정수정"
+}
+
+### 댓글 삭제
+DELETE http://localhost:8080/comment/1

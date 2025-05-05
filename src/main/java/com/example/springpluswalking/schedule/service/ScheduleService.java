@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.example.springpluswalking.comment.service.CommentService;
 import com.example.springpluswalking.schedule.dto.request.ScheduleRequestDto;
 import com.example.springpluswalking.schedule.dto.request.ScheduleupdateRequestDto;
 import com.example.springpluswalking.schedule.dto.response.SchedulePageResponseDto;
@@ -25,6 +26,7 @@ public class ScheduleService {
 
 	private final ScheduleRepository scheduleRepository;
 	private final UserRepository userRepository;
+	private final CommentService commentService;
 
 	public ScheduleResponseDto createSchedule(@Valid ScheduleRequestDto requestDto, Long userId) {
 		Schedule schedule = Schedule.builder()
@@ -34,7 +36,7 @@ public class ScheduleService {
 			.build();
 
 		scheduleRepository.save(schedule);
-		return new ScheduleResponseDto(schedule);
+		return new ScheduleResponseDto(schedule,0);
 	}
 
 	public Page<SchedulePageResponseDto> findAll(int page, int size, Long userId) {
@@ -50,7 +52,7 @@ public class ScheduleService {
 			.id(schedule.getId())
 			.userEmail(schedule.getUserEmail())
 			.title(schedule.getTitle())
-			.commentCount(0)
+			.commentCount(commentService.getCommentCount(schedule.getId()))
 			.createdAt(schedule.getCreatedAt())
 			.build()
 		);
@@ -58,8 +60,7 @@ public class ScheduleService {
 
 	public ScheduleResponseDto findById(Long id) {
 		Schedule findSchedule = scheduleRepository.findByIdOrElseThrow(id);
-
-		return new ScheduleResponseDto(findSchedule);
+		return new ScheduleResponseDto(findSchedule, commentService.getCommentCount(id));
 	}
 
 	public ScheduleResponseDto updateSchedule(Long id, @Valid ScheduleupdateRequestDto requestDto,Long userId) {
@@ -76,7 +77,7 @@ public class ScheduleService {
 			findSchedule.updateContent(requestDto.getContent());
 		}
 		scheduleRepository.save(findSchedule);
-		return new ScheduleResponseDto(findSchedule);
+		return new ScheduleResponseDto(findSchedule, commentService.getCommentCount(id));
 	}
 
 	public void deleteSchedule(Long id, Long userId) {

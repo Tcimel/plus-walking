@@ -1,12 +1,18 @@
 package com.example.springpluswalking.schedule.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.springpluswalking.comment.entity.Comment;
 import com.example.springpluswalking.common.entity.BaseEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Builder
 @NoArgsConstructor
-@Table(name = "scehdule")
+@Table(name = "schedule")
 public class Schedule extends BaseEntity {
 
 	@Id
@@ -34,11 +40,18 @@ public class Schedule extends BaseEntity {
 
 	private String content;
 
-	public Schedule(Long id, String userEmail, String title, String content) {
+	@OneToMany(
+		cascade = CascadeType.ALL,
+		mappedBy = "schedule"
+	)
+	private List<Comment> comments;
+
+	public Schedule(Long id, String userEmail, String title, String content, List<Comment> comments) {
 		this.id = id;
 		this.userEmail = userEmail;
 		this.title = title;
 		this.content = content;
+		this.comments = comments != null ? comments : new ArrayList<>();
 	}
 
 	public void updateTitle(String title){
