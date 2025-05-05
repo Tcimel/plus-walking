@@ -53,7 +53,7 @@ public class ScheduleController {
 	}
 
 	@GetMapping("/schedule/{id}")
-	public ResponseEntity<ScheduleResponseDto> findAllSchedules(
+	public ResponseEntity<ScheduleResponseDto> findById(
 		@PathVariable Long id
 
 	){

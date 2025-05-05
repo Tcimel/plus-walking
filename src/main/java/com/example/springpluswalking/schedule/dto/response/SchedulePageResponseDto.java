@@ -13,9 +13,9 @@ public class SchedulePageResponseDto {
 	private final Long id;
 	private final String userEmail;
 	private final String title;
-	private final String content;
+	// private final String content;
 	private final int commentCount;
 	private final LocalDateTime createdAt;
-	private final LocalDateTime updatedAt;
+	// private final LocalDateTime updatedAt;
 
 }

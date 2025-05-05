@@ -50,10 +50,8 @@ public class ScheduleService {
 			.id(schedule.getId())
 			.userEmail(schedule.getUserEmail())
 			.title(schedule.getTitle())
-			.content(schedule.getContent())
 			.commentCount(0)
 			.createdAt(schedule.getCreatedAt())
-			.updatedAt(schedule.getUpdatedAt())
 			.build()
 		);
 	}
