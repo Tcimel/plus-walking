@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum CommentErrorCode {
 	USER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
 	COMMENT_NOT_FOUND(404, "댓글이 없습니다."),
-	NO_PERMISSION(401, "권한이 없습니다.");
+	NO_PERMISSION(401, "권한이 없습니다."),
+	CANNOT_REPLY(400, "대댓글 등록이 불가합니다.");
 
 	private final int code;
 	private final String message;

@@ -11,6 +11,7 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.example.springpluswalking.comment.exception.CommentException;
 import com.example.springpluswalking.schedule.exception.ScheduleException;
 import com.example.springpluswalking.user.exception.UserException;
 
@@ -32,6 +33,19 @@ public class GlobalException {
 
 	@ExceptionHandler(ScheduleException.class)
 	public ResponseEntity<ExceptionResponseDto> handleScheduleException(ScheduleException ex) {
+		// UserException 에 code 가 null 일 경우, 500 에러
+		HttpStatus httpStatus = Optional.ofNullable(HttpStatus.resolve(ex.getCode()))
+			.orElse(HttpStatus.INTERNAL_SERVER_ERROR);
+
+		// 예외 응답 DTO 생성
+		ExceptionResponseDto response = new ExceptionResponseDto(ex.getCode(), httpStatus.getReasonPhrase(),
+			ex.getMessage());
+
+		return ResponseEntity.status(ex.getCode()).body(response);
+	}
+
+	@ExceptionHandler(CommentException.class)
+	public ResponseEntity<ExceptionResponseDto> handleCommentException(CommentException ex) {
 		// UserException 에 code 가 null 일 경우, 500 에러
 		HttpStatus httpStatus = Optional.ofNullable(HttpStatus.resolve(ex.getCode()))
 			.orElse(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.example.springpluswalking.comment.dto.request.CommentRequestDto;
 import com.example.springpluswalking.comment.dto.response.CommentPageResponseDto;
+import com.example.springpluswalking.comment.dto.response.CommentReplyResponseDto;
 import com.example.springpluswalking.comment.dto.response.CommentResponseDto;
 import com.example.springpluswalking.comment.service.CommentService;
 
@@ -74,6 +75,16 @@ public class CommentController {
 	){
 		commentService.deleteComment(id, userId);
 		return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
+	}
+
+	@PostMapping("comment/{id}/reply")
+	public ResponseEntity<CommentReplyResponseDto> createReply(
+		@SessionAttribute("userId") Long userId,
+		@PathVariable Long id,
+		@Valid @RequestBody CommentRequestDto requestDto
+	){
+		CommentReplyResponseDto responseDto = commentService.createReply(id, userId, requestDto);
+		return new ResponseEntity<>(responseDto,HttpStatus.OK);
 	}
 
 }

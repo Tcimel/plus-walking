@@ -12,4 +12,5 @@ public class CommentPageResponseDto {
 	private final String userEmail;
 	private final String content;
 	private final LocalDateTime createdAt;
+	private final int childrenCount;
 }

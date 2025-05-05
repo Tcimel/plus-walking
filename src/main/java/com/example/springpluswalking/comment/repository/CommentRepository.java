@@ -9,6 +9,7 @@ import com.example.springpluswalking.comment.exception.CommentErrorCode;
 import com.example.springpluswalking.comment.exception.CommentException;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+
 	Page<Comment> findByScheduleId(Long scehduleId, PageRequest request);
 
 	default Page<Comment> findByScheduleIdOrElseThrow(Long scehduleId,PageRequest request){
@@ -24,4 +25,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 	}
 
 	int countByScheduleId(Long id);
+
+	int countByParentCommentId(Long id);
 }

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.springpluswalking.comment.dto.request.CommentRequestDto;
 import com.example.springpluswalking.comment.dto.response.CommentPageResponseDto;
+import com.example.springpluswalking.comment.dto.response.CommentReplyResponseDto;
 import com.example.springpluswalking.comment.dto.response.CommentResponseDto;
 import com.example.springpluswalking.comment.entity.Comment;
 import com.example.springpluswalking.comment.exception.CommentErrorCode;
@@ -37,10 +38,11 @@ public class CommentService {
 			.content(requestDto.getContent())
 			.schedule(findSchedule)
 			.userEmail(writer.getEmail())
+			.parentComment(null)
 			.build();
 
 		commentRepository.save(comment);
-		return new CommentResponseDto(comment);
+		return new CommentResponseDto(comment,0);
 	}
 
 	public Page<CommentPageResponseDto> findAll(Long scheduleId, int page, int size) {
@@ -52,6 +54,7 @@ public class CommentService {
 
 		return commentPage.map(comment -> CommentPageResponseDto.builder()
 			.id(comment.getId())
+			.childrenCount(commentRepository.countByParentCommentId(comment.getId()))
 			.userEmail(comment.getUserEmail())
 			.content(comment.getContent())
 			.createdAt(comment.getCreatedAt())
@@ -61,7 +64,7 @@ public class CommentService {
 
 	public CommentResponseDto findById(Long cid) {
 		Comment findComment = commentRepository.findByIdOrElseThrow(cid);
-		return new CommentResponseDto(findComment);
+		return new CommentResponseDto(findComment,getChildrenCommentCount(cid));
 	}
 
 	@Transactional
@@ -75,7 +78,7 @@ public class CommentService {
 
 		findComment.update(requestDto.getContent());
 		commentRepository.save(findComment);
-		return new CommentResponseDto(findComment);
+		return new CommentResponseDto(findComment,getChildrenCommentCount(cid));
 	}
 
 	public void deleteComment(Long cid, Long userId){
@@ -90,5 +93,28 @@ public class CommentService {
 
 	public int getCommentCount(Long id){
 		return commentRepository.countByScheduleId(id);
+	}
+
+	public int getChildrenCommentCount(Long parentId){
+		return commentRepository.countByParentCommentId(parentId);
+	}
+
+	public CommentReplyResponseDto createReply(Long id, Long userId, @Valid CommentRequestDto requestDto) {
+		Comment parentComment = commentRepository.findByIdOrElseThrow(id);
+		User writer = userRepository.findByIdOrElseThrow(userId);
+
+		if(parentComment.getParentComment()!=null){
+			throw new CommentException(CommentErrorCode.CANNOT_REPLY);
+		}
+
+		Comment comment = Comment.builder()
+			.content(requestDto.getContent())
+			.schedule(parentComment.getSchedule())
+			.userEmail(writer.getEmail())
+			.parentComment(parentComment)
+			.build();
+
+		commentRepository.save(comment);
+		return new CommentReplyResponseDto(comment, commentRepository.countByParentCommentId(id));
 	}
 }
