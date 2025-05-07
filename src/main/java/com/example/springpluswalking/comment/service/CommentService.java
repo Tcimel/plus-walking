@@ -1,5 +1,6 @@
 package com.example.springpluswalking.comment.service;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -50,6 +51,7 @@ public class CommentService {
 
 	public CommentResponseWithMessage findAllAsList(Long scheduleId){
 		List<Comment> commentList = commentRepository.findByScheduleId(scheduleId);
+		commentList.sort(Comparator.comparing(Comment::getCreatedAt));
 		List<CommentResponseDto> dtoList = commentList.stream()
 			.map(comment -> new CommentResponseDto(comment,commentRepository.countByParentCommentId(comment.getId()))).toList();
 		String message = dtoList.isEmpty() ? "댓글이 없습니다." : "";
