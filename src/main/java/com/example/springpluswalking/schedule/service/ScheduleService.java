@@ -5,9 +5,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.example.springpluswalking.comment.dto.response.CommentPageResponseDto;
+import com.example.springpluswalking.comment.dto.response.CommentResponseWithMessage;
 import com.example.springpluswalking.comment.service.CommentService;
 import com.example.springpluswalking.schedule.dto.request.ScheduleRequestDto;
 import com.example.springpluswalking.schedule.dto.request.ScheduleupdateRequestDto;
+import com.example.springpluswalking.schedule.dto.response.ScheduleDetailResponseDto;
 import com.example.springpluswalking.schedule.dto.response.SchedulePageResponseDto;
 import com.example.springpluswalking.schedule.dto.response.ScheduleResponseDto;
 import com.example.springpluswalking.schedule.entity.Schedule;
@@ -58,10 +61,16 @@ public class ScheduleService {
 		);
 	}
 
-	public ScheduleResponseDto findById(Long id) {
+	public ScheduleDetailResponseDto findById(Long id){
 		Schedule findSchedule = scheduleRepository.findByIdOrElseThrow(id);
-		return new ScheduleResponseDto(findSchedule, commentService.getCommentCount(id));
+		CommentResponseWithMessage findCommentList = commentService.findAllAsList(id);
+		return new ScheduleDetailResponseDto(findSchedule,findCommentList);
 	}
+
+	// public ScheduleResponseDto findById(Long id) {
+	// 	Schedule findSchedule = scheduleRepository.findByIdOrElseThrow(id);
+	// 	return new ScheduleResponseDto(findSchedule, commentService.getCommentCount(id));
+	// }
 
 	public ScheduleResponseDto updateSchedule(Long id, @Valid ScheduleupdateRequestDto requestDto,Long userId) {
 		Schedule findSchedule = scheduleRepository.findByIdOrElseThrow(id);

@@ -1,5 +1,7 @@
 package com.example.springpluswalking.comment.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import com.example.springpluswalking.comment.dto.request.CommentRequestDto;
 import com.example.springpluswalking.comment.dto.response.CommentPageResponseDto;
 import com.example.springpluswalking.comment.dto.response.CommentReplyResponseDto;
 import com.example.springpluswalking.comment.dto.response.CommentResponseDto;
+import com.example.springpluswalking.comment.dto.response.CommentResponseWithMessage;
 import com.example.springpluswalking.comment.service.CommentService;
 
 import jakarta.validation.Valid;
@@ -39,13 +42,15 @@ public class CommentController {
 	}
 
 	@GetMapping("{id}/comments")
-	public ResponseEntity<Page<CommentPageResponseDto>> findAllComment(
+	public ResponseEntity<CommentResponseWithMessage> findAllComment(
 		@SessionAttribute("userId") Long userId,
 		@PathVariable Long id,
 		@RequestParam(defaultValue = "1") int page,
 		@RequestParam(defaultValue = "5") int size
 	){
-		Page<CommentPageResponseDto> list = commentService.findAll(id,page,size);
+		CommentResponseWithMessage list = commentService.findAllAsList(id);
+		// List<CommentResponseDto> list = commentService.findAllAsList(id);
+		// Page<CommentPageResponseDto> list = commentService.findAll(id,page,size);
 		return new ResponseEntity<>(list,HttpStatus.OK);
 	}
 

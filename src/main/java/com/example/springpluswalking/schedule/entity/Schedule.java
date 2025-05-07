@@ -3,6 +3,8 @@ package com.example.springpluswalking.schedule.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+
 import com.example.springpluswalking.comment.entity.Comment;
 import com.example.springpluswalking.common.entity.BaseEntity;
 
@@ -44,6 +46,7 @@ public class Schedule extends BaseEntity {
 		cascade = CascadeType.ALL,
 		mappedBy = "schedule"
 	)
+	@BatchSize(size = 30)
 	private List<Comment> comments;
 
 	public Schedule(Long id, String userEmail, String title, String content, List<Comment> comments) {

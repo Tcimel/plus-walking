@@ -1,5 +1,7 @@
 package com.example.springpluswalking.comment.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -10,6 +12,7 @@ import com.example.springpluswalking.comment.dto.request.CommentRequestDto;
 import com.example.springpluswalking.comment.dto.response.CommentPageResponseDto;
 import com.example.springpluswalking.comment.dto.response.CommentReplyResponseDto;
 import com.example.springpluswalking.comment.dto.response.CommentResponseDto;
+import com.example.springpluswalking.comment.dto.response.CommentResponseWithMessage;
 import com.example.springpluswalking.comment.entity.Comment;
 import com.example.springpluswalking.comment.exception.CommentErrorCode;
 import com.example.springpluswalking.comment.exception.CommentException;
@@ -43,6 +46,17 @@ public class CommentService {
 
 		commentRepository.save(comment);
 		return new CommentResponseDto(comment,0);
+	}
+
+	public CommentResponseWithMessage findAllAsList(Long scheduleId){
+		List<Comment> commentList = commentRepository.findByScheduleId(scheduleId);
+		List<CommentResponseDto> dtoList = commentList.stream()
+			.map(comment -> new CommentResponseDto(comment,commentRepository.countByParentCommentId(comment.getId()))).toList();
+		String message = dtoList.isEmpty() ? "댓글이 없습니다." : "";
+		return CommentResponseWithMessage.builder()
+			.message(message)
+			.comments(dtoList)
+			.build();
 	}
 
 	public Page<CommentPageResponseDto> findAll(Long scheduleId, int page, int size) {

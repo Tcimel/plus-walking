@@ -1,5 +1,7 @@
 package com.example.springpluswalking.comment.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +11,7 @@ import com.example.springpluswalking.comment.exception.CommentErrorCode;
 import com.example.springpluswalking.comment.exception.CommentException;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-
+	List<Comment> findByScheduleId(Long scheduleId);
 	Page<Comment> findByScheduleId(Long scehduleId, PageRequest request);
 
 	default Page<Comment> findByScheduleIdOrElseThrow(Long scehduleId,PageRequest request){

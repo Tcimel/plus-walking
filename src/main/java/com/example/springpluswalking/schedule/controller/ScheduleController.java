@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.example.springpluswalking.schedule.dto.request.ScheduleRequestDto;
 import com.example.springpluswalking.schedule.dto.request.ScheduleupdateRequestDto;
+import com.example.springpluswalking.schedule.dto.response.ScheduleDetailResponseDto;
 import com.example.springpluswalking.schedule.dto.response.SchedulePageResponseDto;
 import com.example.springpluswalking.schedule.dto.response.ScheduleResponseDto;
 import com.example.springpluswalking.schedule.service.ScheduleService;
@@ -49,11 +50,11 @@ public class ScheduleController {
 	}
 
 	@GetMapping("/schedule/{id}")
-	public ResponseEntity<ScheduleResponseDto> findById(
+	public ResponseEntity<ScheduleDetailResponseDto> findById(
 		@PathVariable Long id
 
 	){
-		ScheduleResponseDto responseDto = scheduleService.findById(id);
+		ScheduleDetailResponseDto responseDto = scheduleService.findById(id);
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
 	}
 

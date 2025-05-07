@@ -3,6 +3,8 @@ package com.example.springpluswalking.comment.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+
 import com.example.springpluswalking.common.entity.BaseEntity;
 import com.example.springpluswalking.schedule.entity.Schedule;
 
@@ -47,6 +49,7 @@ public class Comment extends BaseEntity {
 	private Comment parentComment;
 
 	@OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+	@BatchSize(size = 10)
 	private List<Comment> childComments = new ArrayList<>();
 
 	public Comment(Long id, String userEmail, String content, Schedule schedule, Comment parentComment, List<Comment> childComments) {

@@ -42,7 +42,7 @@ Content-Type: application/json
 GET http://localhost:8080/schedule?page=1&size=10
 
 ### 일정 단건 조회
-GET http://localhost:8080/schedule/1
+GET http://localhost:8080/schedule/3
 
 ### 일정 수정
 PATCH http://localhost:8080/schedule/2
@@ -71,7 +71,7 @@ GET http://localhost:8080/3/comments
 GET http://localhost:8080/comment/3
 
 ### 댓글 수정
-PATCH http://localhost:8080/comment/6
+PATCH http://localhost:8080/comment/3
 Content-Type: application/json
 
 {
@@ -82,7 +82,7 @@ Content-Type: application/json
 DELETE http://localhost:8080/comment/1
 
 ### 대댓글 생성
-POST http://localhost:8080/comment/6/reply
+POST http://localhost:8080/comment/2/reply
 Content-Type:application/json
 
 {
